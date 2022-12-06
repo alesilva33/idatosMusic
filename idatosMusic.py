@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 import pandas as pd
+from difflib import SequenceMatcher
 
 GENRES_FILEPATH = 'Datasets/data_by_genres.csv'
 
