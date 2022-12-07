@@ -39,7 +39,7 @@ def manejoDeComandos(current, elegidos):
             print('Comando incorrecto!\n')
         else:
             if str(comando) == 'r':
-                return ([], [], True)
+                return ([], elegidos, True)
             else:
                 elem = str(comando).rsplit('i ', 1)[1]
                 found = False
@@ -51,7 +51,6 @@ def manejoDeComandos(current, elegidos):
                     else:
                         count += 1
                 if found:
-                    print(count)
                     elegidos.append(current[count])
                     current.pop(count)
                     return (current, elegidos, False)
@@ -73,5 +72,3 @@ while (len(elegidos) < 5):
     else:
         (current, elegidos, recargar) = manejoDeComandos(current, elegidos)
     elementoElegido = not recargar
-    print(print('PARCIAL: ' + str(elegidos)))
-print('FINAL: ' + str(elegidos))
