@@ -3,10 +3,26 @@ import numpy as np
 import pandas as pd
 from manejoDeGeneros import obtenerGenerosDeCancion
 
-TRACKS_FILEPATH = 'Datasets/tracks_features.csv'
-INDEX_ID_CANCIONES = 0  # TODO: AJUSTAR CON DATO DEL DATASET EFECTIVO
-INDEX_NOMBRE_CANCIONES = 1  # TODO: AJUSTAR CON DATO DEL DATASET EFECTIVO
-INDEX_NOMBRE_ARTISTAS = 4   # TODO: AJUSTAR CON DATO DEL DATASET EFECTIVO
+# TRACKS_FILEPATH = 'Datasets/tracks_features.csv'
+TRACKS_FILEPATH = 'Datasets/integratedData.csv'
+INDEX_ID_CANCIONES = 0
+INDEX_NOMBRE_CANCIONES = 1
+INDEX_NOMBRE_ARTISTAS = 4
+INDEX_ALBUM = 2
+INDEX_DANCEABILITY = 5
+INDEX_ACOUSTUCNESS = 8
+INDEX_ENERGY = 6
+INDEX_KEY = 7
+INDEX_INSTRUMENTALNESS = 9
+INDEX_VALENCE = 10
+INDEX_TEMPO = 11
+INDEX_DIFICULTAD = 14
+INDEX_TONO = 15
+INDEX_CAPO = 16
+INDEX_TUNING = 17
+INDEX_LYRICS = 18
+INDEX_ANIO_CANCION = 13
+INDEX_DURACION = 12
 
 def leerDelCsv(indexDesde):
     with open(TRACKS_FILEPATH) as csv_file:
@@ -19,6 +35,13 @@ def leerDelCsv(indexDesde):
                 aux.append(row[INDEX_ID_CANCIONES])
                 aux.append(row[INDEX_NOMBRE_CANCIONES])
                 aux.append(row[INDEX_NOMBRE_ARTISTAS])
+                aux.append(row[INDEX_DANCEABILITY])
+                aux.append(row[INDEX_ACOUSTUCNESS])
+                aux.append(row[INDEX_ENERGY])
+                aux.append(row[INDEX_KEY])
+                aux.append(row[INDEX_INSTRUMENTALNESS])
+                aux.append(row[INDEX_VALENCE])
+                aux.append(row[INDEX_TEMPO])
                 ret.append(aux)
             if indexDesde + 4 == line_count:
                 break
@@ -71,12 +94,56 @@ def generosDeCancionesElegidas(elegidos):
     ret = []
     for elem in elegidos:
         # TODO CAMBIAR EL PARAMETROS PASADO EN FUNCIOIN obtenerGenerosDeCancion POR LOS VALORES DE LA CANCION QUE SE ESTA RECORRIENDO
-        elem.append(obtenerGenerosDeCancion({'danceability': 0.47, 'acoustucness': 0.0261, 'energy': 0.978, 'key': 7, 'instrumentalness': 1.09e-05, 'valence': 0.35600000000000004, 'tempo': 117.906}))
+        elem.append(obtenerGenerosDeCancion({'danceability': float(elem[3]), 'acoustucness': float(elem[4]), 'energy': float(elem[5]), 'key': float(elem[6]), 'instrumentalness': float(elem[7]), 'valence': float(elem[8]), 'tempo': float(elem[9])}))
+        # elem.append(obtenerGenerosDeCancion({'danceability': 0.47, 'acoustucness': 0.0261, 'energy': 0.978, 'key': 7, 'instrumentalness': 1.09e-05, 'valence': 0.35600000000000004, 'tempo': 117.906}))
         ret.append(elem)
     return ret
 
-def recomendarCancion(elegidosConGeneros,nivelDeDificultad):
-    print('TODO: FALTA IMPLEMENTAR')
+def obtenerListaDeGenerosPrincipales(elegidosConGeneros):
+    ret = []
+    for elem in elegidosConGeneros:
+        for gen in elem[10][0]:
+            ret.append(gen)
+    return ret
+
+def presentarDatosDeCancionElegida(cancionElegida):
+    if (cancionElegida == ''):
+        print('\n---------- NO SE PUEDEN REALIZAR MAS RECOMENDACIONES. NO SE HAN ENCONTRADO CANCIONES CON EL MISMO NIVEL DE DIFICULTAD DEL INGRESADO POR EL USUARIO QUE COMPARTAN GENERO CON LA CANCIONES INGRESADAS POR EL MISMO ----------\n')
+    else:
+        print('\n---------- DATOS DE CANCION RECOMENDADA ----------\n')
+        print(' ***** Nombre de la cancion: ' + str(cancionElegida[INDEX_NOMBRE_CANCIONES]))
+        print(' ***** Album: ' + str(cancionElegida[INDEX_ALBUM]))
+        print(' ***** Artista: ' + str(cancionElegida[INDEX_NOMBRE_ARTISTAS]))
+        print(' ***** Año de la cancion: ' + str(cancionElegida[INDEX_ANIO_CANCION]))
+        print(' ***** Duracion de la cancion (en segundos): ' + str(cancionElegida[INDEX_DURACION]))
+        print(' ***** Dificultad de la cancion: ' + str(cancionElegida[INDEX_DIFICULTAD]))
+        print(' ***** Tono de la cancion: ' + str(cancionElegida[INDEX_TONO]))
+        print(' ***** Capo de la cancion: ' + str(cancionElegida[INDEX_CAPO]))
+        print(' ***** Tunning de la cancion: ' + str(cancionElegida[INDEX_TUNING]))
+        print(' ***** Letra de la cancion: ' + str(cancionElegida[INDEX_LYRICS]))
+        print('\n\n')
+
+def recomendarCancion(elegidosConGeneros, nivelDeDificultad, indexDesde):
+    listaDeGenerosPrincipales = obtenerListaDeGenerosPrincipales(elegidosConGeneros)
+    with open(TRACKS_FILEPATH) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        salir = False
+        cancionElegida = ''
+        for row in csv_reader:
+            if line_count >= indexDesde:
+                if (row[INDEX_DIFICULTAD] == nivelDeDificultad):
+                    generos = obtenerGenerosDeCancion({'danceability': float(row[INDEX_DANCEABILITY]), 'acoustucness': float(row[INDEX_ACOUSTUCNESS]), 'energy': float(row[INDEX_ENERGY]), 'key': float(row[INDEX_KEY]), 'instrumentalness': float(row[INDEX_INSTRUMENTALNESS]), 'valence': float(row[INDEX_VALENCE]), 'tempo': float(row[INDEX_TEMPO])})
+                    for gen in generos[0]:
+                        if (listaDeGenerosPrincipales.count(gen) > 0):
+                            cancionElegida = row
+                            salir = True
+                            break
+            line_count += 1
+            if salir:
+                break
+        presentarDatosDeCancionElegida(cancionElegida)
+    return line_count
 
 def stringDeGeneros(generos):
     stringGeneros = ''
@@ -96,9 +163,9 @@ def observarDatosIngresados(elegidosConGeneros,nivelDeDificultad = ''):
     for elem in elegidosConGeneros:
         nombre = str(elem[1])
         artista = str(elem[2])
-        generos = stringDeGeneros(elem[3][0])
-        generosSimilares = stringDeGeneros(elem[3][1])
-        generosMenosSimilares = stringDeGeneros(elem[3][2])
+        generos = stringDeGeneros(elem[10][0])
+        generosSimilares = stringDeGeneros(elem[10][1])
+        generosMenosSimilares = stringDeGeneros(elem[10][2])
         print('---------- ' + nombre + ' ---------- ' + artista + ' ---------- ' + generos + ' ---------- ' + generosSimilares + ' ---------- ' + generosMenosSimilares)
     print('\n')
     if nivelDeDificultad != '':
@@ -129,7 +196,7 @@ def eleccionDeCanciones(numero):
 # MAIN
 
 print('==================== BIENVENIDO A IDatos Music ====================')
-elegidosConGeneros = eleccionDeCanciones(5)
+elegidosConGeneros = eleccionDeCanciones(1)
 
 print('Ya se han obtenido las 5 canciones de su preferencia. Ahora debe escoger el nivel de dificultad deseado para las canciones a ser recomendadas:\n')
 print('==================== 1 --> Novice')
@@ -150,6 +217,7 @@ while (comandoIncorrecto):
 print('\nYa ha terminado el seteo inicial de datos!\n\n')
 
 nosVimo = False
+lineaDesdeDondeObtenerRecomendacion = 1
 while(not nosVimo):
     print("A continuacion cuenta con varias acciones para continuar con el sistema de recomendaciones. Elija uno de los comandos para continuar con la accion deseada:")
     print('==================== 1 --> Recomendacion de cancion en base a los datos ingresados')
@@ -162,7 +230,7 @@ while(not nosVimo):
         if (str(comando) == '1' or str(comando) == '2' or str(comando) == '3' or str(comando) == '4'):
             comandoIncorrecto = False
             if str(comando) == '1':
-                recomendarCancion(elegidosConGeneros,nivelDeDificultad)
+                lineaDesdeDondeObtenerRecomendacion = recomendarCancion(elegidosConGeneros,nivelDeDificultad, lineaDesdeDondeObtenerRecomendacion)
             elif str(comando) == '2':
                 observarDatosIngresados(elegidosConGeneros,nivelDeDificultad)
             elif str(comando) == '3':
