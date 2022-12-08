@@ -102,7 +102,6 @@ with open('Datasets/data_by_genres.csv') as csv_file:
             tempo[line_count-1][1] = float(row[10])
 
         line_count += 1
-    print('Termino de procesar los parametros...')
 
 
 # Ordenamiento

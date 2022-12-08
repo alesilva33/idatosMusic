@@ -25,10 +25,19 @@ def leerDelCsv(indexDesde):
             line_count += 1
     return ret
 
-def mensajesBase():
-    print(' Seleccione 5 canciones, aca tenes 5 para elegir.\n\n - i {id} --> Comando para seleccionar una cancion. {id} es el identificador mostrado en las canciones expuestas.\n - r      --> Comando para desplegar 5 canciones mas.\n\n')
+def mensajeDeTituloDeCanciones():
+    print(' - i {id} --> Comando para seleccionar una cancion. {id} es el identificador mostrado en las canciones expuestas.\n - r      --> Comando para desplegar 5 canciones mas.\n\n')
     print('========== CANCIONES ==========')
     print('---------- ID ---------- NOMBRE ---------- ARTISTAS ----------')
+
+def mensajesBase(numero):
+    txt = ''
+    if (numero == 1):
+       txt = ' Seleccione 1 cancion, '
+    else:
+        txt =  ' Seleccione ' + str(numero) + ' canciones, '
+    print(txt + 'aca tenes 5 para elegir.\n\n')
+    mensajeDeTituloDeCanciones()
 
 def manejoDeComandos(current, elegidos):
     for cur in current:
@@ -68,29 +77,59 @@ def generosDeCancionesElegidas(elegidos):
 
 def recomendarCancion(elegidosConGeneros,nivelDeDificultad):
     print('TODO: FALTA IMPLEMENTAR')
-def observarDatosIngresados(elegidosConGeneros,nivelDeDificultad):
-    print('TODO: FALTA IMPLEMENTAR')
-def verGenerosDeCancion():
-    print('TODO: FALTA IMPLEMENTAR')
 
+def stringDeGeneros(generos):
+    stringGeneros = ''
+    primero = True
+    for gen in generos:
+        if (primero):
+            primero = False
+            stringGeneros = str(gen)
+        else:
+            stringGeneros += ', ' + str(gen)
+    if (primero):
+        stringGeneros = 'NO TIENE'
+    return stringGeneros
+
+def observarDatosIngresados(elegidosConGeneros,nivelDeDificultad = ''):
+    print('\n---------- NOMBRE ---------- ARTISTAS ---------- GENEROS ---------- GENEROS SIMILARES ---------- GENEROS MENOS SIMILARES\n')
+    for elem in elegidosConGeneros:
+        nombre = str(elem[1])
+        artista = str(elem[2])
+        generos = stringDeGeneros(elem[3][0])
+        generosSimilares = stringDeGeneros(elem[3][1])
+        generosMenosSimilares = stringDeGeneros(elem[3][2])
+        print('---------- ' + nombre + ' ---------- ' + artista + ' ---------- ' + generos + ' ---------- ' + generosSimilares + ' ---------- ' + generosMenosSimilares)
+    print('\n')
+    if nivelDeDificultad != '':
+        print(' ******** NIVEL DE DIFICULTAD: ' + nivelDeDificultad + '\n\n')
+    else:
+        print('\n')
+
+def verGenerosDeCancion():
+    elegidosConGeneros = eleccionDeCanciones(1)
+    observarDatosIngresados(elegidosConGeneros)
+
+
+def eleccionDeCanciones(numero):
+    index = 1
+    elegidos = []
+    elementoElegido = False
+    while (len(elegidos) < numero):
+        mensajesBase(numero)
+        if not elementoElegido:
+            current = leerDelCsv(index)
+            index += 5
+            (current, elegidos, recargar) = manejoDeComandos(current, elegidos)
+        else:
+            (current, elegidos, recargar) = manejoDeComandos(current, elegidos)
+        elementoElegido = not recargar
+    return generosDeCancionesElegidas(elegidos)
 
 # MAIN
 
 print('==================== BIENVENIDO A IDatos Music ====================')
-index = 1
-elegidos = []
-elementoElegido = False
-while (len(elegidos) < 5):
-    mensajesBase()
-    if not elementoElegido:
-        current = leerDelCsv(index)
-        index += 5
-        (current, elegidos, recargar) = manejoDeComandos(current, elegidos)
-    else:
-        (current, elegidos, recargar) = manejoDeComandos(current, elegidos)
-    elementoElegido = not recargar
-
-elegidosConGeneros = generosDeCancionesElegidas(elegidos)
+elegidosConGeneros = eleccionDeCanciones(5)
 
 print('Ya se han obtenido las 5 canciones de su preferencia. Ahora debe escoger el nivel de dificultad deseado para las canciones a ser recomendadas:\n')
 print('==================== 1 --> Novice')
@@ -108,11 +147,11 @@ while (comandoIncorrecto):
             nivelDeDificultad = 'intermediate'
     else:
         print('Comando incorrecto!\n')
-print('\nYa a terminado el seteo inicial de datos.\n\n')
+print('\nYa ha terminado el seteo inicial de datos!\n\n')
 
 nosVimo = False
 while(not nosVimo):
-    print("A conitnuacion cuenta con varias acciones para continuar con el sistema de recomendaciones. Elija uno de los comandos para continuar con la accion deseada:")
+    print("A continuacion cuenta con varias acciones para continuar con el sistema de recomendaciones. Elija uno de los comandos para continuar con la accion deseada:")
     print('==================== 1 --> Recomendacion de cancion en base a los datos ingresados')
     print('==================== 2 --> Observar los datos ingresados')
     print('==================== 3 --> Ver generos de una cancion determinada')
@@ -132,4 +171,4 @@ while(not nosVimo):
                 nosVimo = True
         else:
             print('Comando incorrecto!\n')
-print('NOS VIMO!')
+print('\n\nNOS VIMO!')
