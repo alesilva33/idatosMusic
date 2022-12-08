@@ -7,22 +7,22 @@ from manejoDeGeneros import obtenerGenerosDeCancion
 TRACKS_FILEPATH = 'Datasets/integratedData.csv'
 INDEX_ID_CANCIONES = 0
 INDEX_NOMBRE_CANCIONES = 1
-INDEX_NOMBRE_ARTISTAS = 4
-INDEX_ALBUM = 2
-INDEX_DANCEABILITY = 5
-INDEX_ACOUSTUCNESS = 8
-INDEX_ENERGY = 6
-INDEX_KEY = 7
-INDEX_INSTRUMENTALNESS = 9
-INDEX_VALENCE = 10
-INDEX_TEMPO = 11
-INDEX_DIFICULTAD = 14
-INDEX_TONO = 15
-INDEX_CAPO = 16
-INDEX_TUNING = 17
-INDEX_LYRICS = 18
-INDEX_ANIO_CANCION = 13
-INDEX_DURACION = 12
+INDEX_NOMBRE_ARTISTAS = 2
+INDEX_ALBUM = 7
+INDEX_DANCEABILITY = 8
+INDEX_ACOUSTUCNESS = 11
+INDEX_ENERGY = 9
+INDEX_KEY = 10
+INDEX_INSTRUMENTALNESS = 12
+INDEX_VALENCE = 13
+INDEX_TEMPO = 14
+INDEX_DIFICULTAD = 3
+INDEX_TONO = 4
+INDEX_CAPO = 5
+INDEX_TUNING = 6
+INDEX_LYRICS = 17
+INDEX_ANIO_CANCION = 16
+INDEX_DURACION = 15
 
 def leerDelCsv(indexDesde):
     with open(TRACKS_FILEPATH) as csv_file:
@@ -196,7 +196,7 @@ def eleccionDeCanciones(numero):
 # MAIN
 
 print('==================== BIENVENIDO A IDatos Music ====================')
-elegidosConGeneros = eleccionDeCanciones(1)
+elegidosConGeneros = eleccionDeCanciones(5)
 
 print('Ya se han obtenido las 5 canciones de su preferencia. Ahora debe escoger el nivel de dificultad deseado para las canciones a ser recomendadas:\n')
 print('==================== 1 --> Novice')
