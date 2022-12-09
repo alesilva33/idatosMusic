@@ -4,13 +4,13 @@ from enum import Enum
 
 DATASETS_FILEPATH = 'Datasets'
 MINIMUM_MATCH_PERCENTAGE = 0.8
-NUMBER_OF_ITERATIONS = 2000
+NUMBER_OF_ITERATIONS = 5000
 
 class Entries(Enum):
     NAME = 1
     ALBUM = 2
     ARTIST = 4
-    DANCEABILITY = 9
+    DANCEABILITY = 9    
     ENERGY = 10
     KEY = 11
     ACOUSTICNESS = 15
