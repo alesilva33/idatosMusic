@@ -3,8 +3,7 @@ import numpy as np
 import pandas as pd
 from manejoDeGeneros import obtenerGenerosDeCancion
 
-# TRACKS_FILEPATH = 'Datasets/tracks_features.csv'
-TRACKS_FILEPATH = 'Datasets/integratedData.csv'
+TRACKS_FILEPATH = 'integratedData.csv'
 INDEX_ID_CANCIONES = 0
 INDEX_NOMBRE_CANCIONES = 1
 INDEX_NOMBRE_ARTISTAS = 2
